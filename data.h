@@ -3,9 +3,11 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include <chrono>
 #include <vector>
 #include "Song.h"
 using namespace std;
+using namespace std::chrono;
 
 class Data{
     public:
@@ -47,59 +49,61 @@ class Data{
         }
 
         // This function handles all the data retrieving without needing to access the other ones.
-        vector<Song> getSortedData(string category, string type){
+        int getSortedData(string category, string type){
+            auto start = high_resolution_clock::now();
             if(type == "radix"){
                 if(category == "rank"){
                     radixSortRank(data);
-                    return data;
+                
                 }
                 else if(category == "id"){
                     radixSortID(data);
-                    return data;
+
                 }
                 else if(category == "streams"){
                     radixSortStreams(data);
-                    return data;
+
                 }
                 else if(category == "name"){
                     radixSortName(data);
-                    return data;
+
                 }
                 else if(category == "country"){
                     radixSortCountry(data);
-                    return data;
+
                 }
                 else if(category == "genre"){
                     radixSortGenre(data);
-                    return data;
+
                 }
             }
             else if(type == "quick"){
                 if(category == "rank"){
                     quickSortRank(data,0,145173);
-                    return data;
+
                 }
                 else if(category == "id"){
                     quickSortID(data,0,145173);
-                    return data;
+
                 }
                 else if(category == "streams"){
                     quickSortStreams(data,0,145173);
-                    return data;
+
                 }
                 else if(category == "name"){
                     quickSortName(data,0,145173);
-                    return data;
+
                 }
                 else if(category == "country"){
                     quickSortCountry(data,0,145173);
-                    return data;
+
                 }
                 else if(category == "genre"){
                     quickSortGenre(data,0,145173);
-                    return data;
                 }
-
+                auto stop = high_resolution_clock::now();
+                auto duration = duration_cast<milliseconds>(stop-start);
+                return duration.count();
             }
         }
 
