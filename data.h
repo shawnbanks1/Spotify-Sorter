@@ -16,7 +16,6 @@ class Data{
             string tmp;
             int rank;
             int streams;
-            string date;
             string id;
             string name;
             string country;
@@ -26,9 +25,8 @@ class Data{
             ifs.open("StreamingData.csv");
             getline(ifs, tmp);
 
-            while(getline(ifs,tmp))
+            while(getline(ifs,tmp)){
                 istringstream ss(tmp);
-                par = "";
                 getline(ss,par,',');
                 rank = stoi(par);
                 getline(ss,par,',');
@@ -41,12 +39,11 @@ class Data{
                 country = par;
                 getline(ss,par,',');
                 genre = par;
-                getline(ss,par,',');
-                date = par;
-            }
-                Song s = Song(rank,id,streams,name,country,genre,date);
+
+                Song s = Song(rank,id,streams,name,country,genre);
                 data[count] = s;
                 count++;
+            }
         }
 
         // This function handles all the data retrieving without needing to access the other ones.
@@ -76,10 +73,6 @@ class Data{
                     radixSortGenre(data);
                     return data;
                 }
-                else if(category == "date"){
-                    radixSortDate(data);
-                    return data;
-                }
             }
             else if(type == "quick"){
                 if(category == "rank"){
@@ -106,10 +99,6 @@ class Data{
                     quickSortGenre(data,0,145173);
                     return data;
                 }
-                else if(category == "date"){
-                    quickSortDate(data,0,145173);
-                    return data;
-                }
 
             }
         }
@@ -124,19 +113,18 @@ class Data{
             }
 
             for(int j=0; j<145174; j++){
-                countArr[(arr[j].getRank() / place)%10]++;
+                int x = (arr[j].getRank() / place)%10;
+                countArr[x]++;
             }
 
-            for(int k=0; k<10; k++){
-                if(k!=0){
-                    countArr[k]+=countArr[k-1];
-                }
+            for(int k=1; k<10; k++){
+                countArr[k]+=countArr[k-1];
             }
 
-            for(int m=0; m<145174; m++){
+            for(int m=145173; m>=0; m--){
                 int x = (arr[m].getRank() / place)%10;
+                out[countArr[x]-1] = arr[m];
                 countArr[x]--;
-                out[countArr[x]] = arr[m];
             }
 
             for(int n=0; n<145174; n++){
@@ -147,15 +135,11 @@ class Data{
 
         void radixSortRank(vector<Song> &arr){
             int max = 0;
-            cout<<"1"<<endl;
             for(int i=0; i<145174; i++){
-                cout<<"1.5"<<endl;
                 if(arr[i].getRank() > max){
-                    cout<<arr[i].getRank()<<endl;
                     max = arr[i].getRank();
                 }
             }
-            cout<<"2"<<endl;
 
             for(int j=1; max/j>0; j*=10){
                 countingSortRank(arr,j);
@@ -174,16 +158,14 @@ class Data{
                 countArr[(arr[j].getStreams() / place)%10]++;
             }
 
-            for(int k=0; k<10; k++){
-                if(k!=0){
-                    countArr[k]+=countArr[k-1];
-                }
+            for(int k=1; k<10; k++){
+                countArr[k]+=countArr[k-1];
             }
 
             for(int m=0; m<145174; m++){
                 int x = (arr[m].getStreams() / place)%10;
+                out[countArr[x]-1] = arr[m];
                 countArr[x]--;
-                out[countArr[x]] = arr[m];
             }
 
             for(int n=0; n<145174; n++){
@@ -205,48 +187,7 @@ class Data{
             }
         }
 
-        void countingSortDate(vector<Song> &arr, int place){
-            vector<Song> out = vector<Song>(145174);
-            int countArr[10];
-
-            for(int i =0; i<10; i++){
-                countArr[i] = 0;
-            }
-
-            for(int j=0; j<145174; j++){
-                countArr[(arr[j].getDate() / place)%10]++;
-            }
-
-            for(int k=0; k<10; k++){
-                if(k!=0){
-                    countArr[k]+=countArr[k-1];
-                }
-            }
-
-            for(int m=0; m<145174; m++){
-                int x = (arr[m].getDate() / place)%10;
-                countArr[x]--;
-                out[countArr[x]] = arr[m];
-            }
-
-            for(int n=0; n<145174; n++){
-                arr[n] = out[n];
-            }
-        }
-
-
-        void radixSortDate(vector<Song> &arr){
-            int max = 0;
-            for(int i=0; i<145174; i++){
-                if(arr[i].getDate()>max){
-                    max = arr[i].getDate();
-                }
-            }
-
-            for(int j=1; max/j>0; j*=10){
-                countingSortDate(arr,j);
-            }
-        }
+        
 
         int val(char c){
             if(c<0){
@@ -266,24 +207,22 @@ class Data{
             }
 
             for(int j=0; j<145174; j++){
-                if(arr[j].getID().length()-1 >= place){
-                    countArr[val(arr[j].getID()[place])]++;
+                if(place < arr[j].getID().length()-1){
+                    countArr[(int)(unsigned char)arr[j].getID()[place]]++;
                 }
                 else{
                     countArr[0]++;
                 }
             }
 
-            for(int k=0; k<256; k++){
-                if(k!=0){
-                    countArr[k]+=countArr[k-1];
-                }
+            for(int k=1; k<256; k++){
+                countArr[k]+=countArr[k-1];
             }
 
-            for(int m=0; m<145174; m++){
-                int x = val(arr[m].getID()[place]);
+            for(int m=145173; m>=0; m--){
+                int x = (int)(unsigned char)arr[m].getID()[place];
+                out[countArr[x]-1] = arr[m];
                 countArr[x]--;
-                out[countArr[x]] = arr[m];
             }
 
             for(int n=0; n<145174; n++){
@@ -292,14 +231,14 @@ class Data{
         }
 
         void radixSortID(vector<Song> &arr){
-            string max_string;
+            string max_string = arr[0].getID();
             for(int i=0; i<145174; i++){
                 if(arr[i].getID() > max_string){
                     max_string = arr[i].getID();
                 }
             }
 
-            for(int j=0; j<max_string.length(); j++){
+            for(int j=max_string.length()-1; j>=0; j++){
                 countingSortID(arr, j);
             }
         }
@@ -486,22 +425,7 @@ class Data{
             return (i + 1);
         }
 
-        int partitionDate(vector<Song> &arr, int low, int high){
-            int pivot = arr[high].getDate(); // pivot
-            int i = (low - 1); // Index of smaller element and indicates
-                        // the right position of pivot found so far
-
-            for (int j = low; j <= high - 1; j++) {
-                // If current element is smaller than the pivot
-                if (arr[j].getDate() < pivot) {
-                    i++; // increment index of smaller element
-                    swap(&arr[i], &arr[j]);
-                }
-            }
-            
-            swap(&arr[i + 1], &arr[high]);
-            return (i + 1);
-        }
+        
 
         void quickSortRank(vector<Song> &arr, int low, int high){
             if (low < high) {
@@ -527,17 +451,7 @@ class Data{
             }
         }
 
-        void quickSortDate(vector<Song> &arr, int low, int high){
-            if (low < high) {
-                /* pi is partitioning index, arr[p] is now at right place */
-                int pi = partitionDate(arr, low, high);
-
-                // Separately sort elements before
-                // partition and after partition
-                quickSortDate(arr, low, pi - 1);
-                quickSortDate (arr, pi + 1, high);
-            }
-        }
+        
 
         void quickSortID(vector<Song> &arr, int left, int right){ 
             int p = left, q = right;
