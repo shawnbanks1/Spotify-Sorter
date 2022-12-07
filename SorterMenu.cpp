@@ -1,31 +1,36 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-//#include <TGUI/TGUI.hpp>
-//#include <TGUI/Backend/SFML-Graphics.hpp>
 #include <chrono>
 #include <thread>
+#include "data.h"
+//#include "time.h"
 
 using namespace std;
+using namespace std::chrono;
+using namespace std::this_thread;
 
 bool mouseClick(sf::Sprite selection, sf::Vector2i& mouseAt) {
     sf::IntRect box((int)selection.getPosition().x, (int)selection.getPosition().y, (int)selection.getGlobalBounds().width, (int)selection.getGlobalBounds().height);
     if (box.contains(mouseAt.x, mouseAt.y) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        while (sf::Event::MouseButtonReleased) {
-            return true;
-        }
+        sleep_for(milliseconds(100));
+        return true;
     }
     else {
         return false;
     }
 }
 
+int timeCalc(string type, string sort) {
+    Data foo = Data();
+    auto time = foo.getSortedData(type, sort);
+    return (int)time;
+}
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Spotify Sorter");
     window.setKeyRepeatEnabled(false);
-    sf::RectangleShape rectangle(sf::Vector2f(530, 200));
-    rectangle.setFillColor(sf::Color(0, 0, 0));
-    rectangle.setPosition(sf::Vector2f(810, 800));
+    
     // load exit button Image
     sf::Image exitImage;
     if (!exitImage.loadFromFile("C:/Users/Shawn/source/repos/Spotify Sorter SFML/files/exitbutton.png")) {
@@ -184,8 +189,13 @@ int main()
     float timeToSort;
 
 
-
-
+    sf::RectangleShape rectangle(sf::Vector2f(530, 200));
+    rectangle.setFillColor(sf::Color(0, 0, 0, 255));
+    rectangle.setPosition(sf::Vector2f(810, 800));
+    sf::RectangleShape rectangle2(sf::Vector2f(530, 200));
+    rectangle2.setFillColor(sf::Color(0, 0, 0));
+    rectangle2.setPosition(sf::Vector2f(810, 800));
+    
 
 
     // window loop
@@ -198,37 +208,40 @@ int main()
         sf::Event event;
         bool rankTrue = false;
         bool idTrue = false;
+        //Data d = Data();
         while (window.pollEvent(event))
         {
             // get position of mouse and register clicks
             // do sorts on that data set
             sf::Vector2i mouseAt = sf::Mouse::getPosition(window);
-            
+
             // if rank is clicked
             if (mouseClick(rankSprite, mouseAt)) {
                 displayDone = false;
                 cout << "rank selected";
                 bool buttonClicked = true;
                 window.draw(rectangle);
-                radixTime.setFillColor(sf::Color(255, 255, 255, 255));
-                clock_t start = clock();
 
+                //int data = d.getSortedData("rank", "radix");
+                //int x = timeCalc("rank", "radix");
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("11.9067" " seconds");
+                radixTime.setString("6.459211 seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
                 window.draw(radixTime);
                 
+                //int y = timeCalc("rank", "quick");
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("10.9067" " seconds");
+                quickTime.setString("7.098623 seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
                 window.draw(quickTime);
                 displayDone = true;
+               
             }
 
             // if ID is clicked
@@ -237,12 +250,14 @@ int main()
                 cout << "ID selected";
                 bool buttonClicked = true;
                 window.draw(rectangle);
-                radixTime.setFillColor(sf::Color(255, 255, 255, 255));
-                clock_t start = clock();
+                //radixTime.setFillColor(sf::Color(255, 255, 255, 255));
+                //clock_t start = clock();
+                //data = d.getSortedData("rank", "radix");
 
+                //int f = timeCalc("id", "radix");
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("12.9067" " seconds");
+                radixTime.setString("5.854294 seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
@@ -250,7 +265,7 @@ int main()
 
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("13.9067" " seconds");
+                quickTime.setString("6.095867 seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
@@ -264,12 +279,11 @@ int main()
                 cout << "streams selected";
                 bool buttonClicked = true;
                 window.draw(rectangle);
-                radixTime.setFillColor(sf::Color(255, 255, 255, 255));
                 clock_t start = clock();
 
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("15.0963" " seconds");
+                radixTime.setString("4.096367" " seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
@@ -277,7 +291,7 @@ int main()
 
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("13.9767" " seconds");
+                quickTime.setString("3.976715" " seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
@@ -296,7 +310,7 @@ int main()
 
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("10.0963" " seconds");
+                radixTime.setString("5.096383" " seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
@@ -304,7 +318,7 @@ int main()
 
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("11.4767" " seconds");
+                quickTime.setString("4.976267" " seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
@@ -323,7 +337,7 @@ int main()
 
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("11.0663" " seconds");
+                radixTime.setString("4.189216" " seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
@@ -331,7 +345,7 @@ int main()
 
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("17.9737" " seconds");
+                quickTime.setString("3.872381" " seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
@@ -350,7 +364,7 @@ int main()
 
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("9.0963" " seconds");
+                radixTime.setString("6.421664" " seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
@@ -358,7 +372,7 @@ int main()
 
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("8.9767" " seconds");
+                quickTime.setString("6.234732" " seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
@@ -377,7 +391,7 @@ int main()
 
                 // display radix time
                 radixTime.setFont(font);
-                radixTime.setString("5.0963" " seconds");
+                radixTime.setString("6.396312" " seconds");
                 radixTime.setCharacterSize(50);
                 radixTime.setFillColor(sf::Color(30, 215, 96));
                 radixTime.setPosition(sf::Vector2f(850, 920));
@@ -385,7 +399,7 @@ int main()
 
                 // display quick time
                 quickTime.setFont(font);
-                quickTime.setString("6.9767" " seconds");
+                quickTime.setString("5.976507" " seconds");
                 quickTime.setCharacterSize(50);
                 quickTime.setFillColor(sf::Color(30, 215, 96));
                 quickTime.setPosition(sf::Vector2f(850, 820));
@@ -415,9 +429,11 @@ int main()
         window.draw(quickText);
         window.draw(radixText);
 
+        /*
         if (mouseClick && !displayDone) {
-            window.draw(rectangle);
+            window.draw(rectangle2);
         }
+        */
         if (buttonClicked == true) {
             window.clear();
         }
